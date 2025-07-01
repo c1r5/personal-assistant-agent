@@ -81,7 +81,7 @@ def _load_mcp_toolset(connection: Connection) -> MCPToolset:
             )
 
 
-def load_tools(mcp_config: MCPServerConfig) -> list[MCPToolset]:
+def load_mcp_servers(mcp_config: MCPServerConfig) -> list[MCPToolset]:
     servers = _mcp_config_server_parser(mcp_config)
     toolset = [_load_mcp_toolset(connection) for _, connection in servers.items()]
 
