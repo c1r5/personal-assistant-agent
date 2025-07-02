@@ -2,9 +2,12 @@ import json
 import logging
 
 from google.adk import Agent
-from personal_assistant_agent.tools.mcp_loader import load_mcp_servers
+from pydantic import Field
+from multi_tool_agent.config import AgentModel, Configs
+from multi_tool_agent.tools.mcp_loader import load_mcp_servers
 
 logger = logging.getLogger(__name__ + ".notes-agent")
+configs = Configs(agent_settings=AgentModel(name=Field(default="NotesAgent")))
 
 try:
     with open("mcp.json", "r") as f:
@@ -16,8 +19,8 @@ except Exception as e:
     logger.error("Erro ao obter ferramentas do arquivo: ", exc_info=e)
 
 notes_agent = Agent(
-    model="gemini-1.5-pro-002",
-    name="NotesAgent",
+    model=configs.agent_settings.model,
+    name=configs.agent_settings.name,
     description="Um agente para criar, buscar e gerenciar anotações em diversas plataformas.",
     instruction="""
       Você é um agente de anotações.
@@ -30,4 +33,3 @@ notes_agent = Agent(
     """,
     tools=[*mcp_tools],
 )
-

@@ -1,13 +1,16 @@
 from google.adk import Agent
 from google.genai import types
 
-from .agents import notes_agent, current_datetime_agent
+from config import Configs
+from agents import notes_agent, current_datetime_agent
 
 gen_config = types.GenerateContentConfig(temperature=0.7, top_p=0.9)
 
-root_agent = Agent(
-    name="MasterPersonalAssistantAgent",
-    model="gemini-2.0-flash",
+configs = Configs()
+
+root_agert = Agent(
+    name=configs.agent_settings.name,
+    model=configs.agent_settings.model,
     sub_agents=[current_datetime_agent, notes_agent],
     instruction="""
         You are a helpful assistant thats orchestrates sub assistant. 
