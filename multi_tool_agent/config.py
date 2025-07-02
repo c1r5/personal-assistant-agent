@@ -3,7 +3,7 @@ from pydantic import BaseModel, Field
 
 
 class AgentModel(BaseModel):
-    name: str = Field(default="master_assistant_agent")
+    name: str = Field(default="MasterAssistantAgent")
     model: str = Field(default="gemini-2.5-flash")
 
 

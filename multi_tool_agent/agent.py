@@ -1,17 +1,18 @@
 from google.adk import Agent
 from google.genai import types
 
-from config import Configs
-from agents import notes_agent, current_datetime_agent
+from .config import Configs
+from .sub_agents import notes_agent, current_datetime_agent, weather_agent
 
 gen_config = types.GenerateContentConfig(temperature=0.7, top_p=0.9)
 
 configs = Configs()
 
-root_agert = Agent(
+root_agent = Agent(
     name=configs.agent_settings.name,
     model=configs.agent_settings.model,
-    sub_agents=[current_datetime_agent, notes_agent],
+    sub_agents=[current_datetime_agent, notes_agent, weather_agent],
+    generate_content_config=gen_config,
     instruction="""
         You are a helpful assistant thats orchestrates sub assistant. 
         Choose the appropriate assistant based on the user's question. 
@@ -27,5 +28,4 @@ root_agert = Agent(
         4. Use appropriate context from the user's question
         5. Avoid simply repeating the raw data
     """,
-    generate_content_config=gen_config,
 )

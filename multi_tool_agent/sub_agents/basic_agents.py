@@ -2,8 +2,7 @@ from google.adk import Agent
 from pydantic import Field
 
 from multi_tool_agent.config import AgentModel, Configs
-
-form multi_tool_agent.tools.get_weather_tool import get_weather
+from multi_tool_agent.tools.get_weather_tool import get_weather
 
 from multi_tool_agent.tools.get_current_time import (
     calculate_future_date,
@@ -12,8 +11,7 @@ from multi_tool_agent.tools.get_current_time import (
     get_day_of_week,
 )
 
-configs = Configs()
-configs.agent_settings = AgentModel(name=Field(default="CurrentDatetimeAgent"))
+configs = Configs(agent_settings=AgentModel(name="CurrentDatetimeAgent"))
 
 current_datetime_agent = Agent(
     model=configs.agent_settings.model,
@@ -57,10 +55,15 @@ weather_agent = Agent(
     name=configs.agent_settings.name,
     model=configs.agent_settings.model,  # Can be a string for Gemini or a LiteLlm object
     description="Provides weather information for specific cities.",
-    instruction="You are a helpful weather assistant. "
-    "When the user asks for the weather in a specific city, "
-    "use the 'get_weather' tool to find the information. "
-    "If the tool returns an error, inform the user politely. "
-    "If the tool is successful, present the weather report clearly.",
+    instruction="""You are a helpful weather assistant. Your goal is to provide current weather information and forecasts.
+
+    When the user asks for the weather, use the 'get_weather' tool. This tool can provide both the current weather and a forecast for several days.
+
+    Instructions:
+    1.  **Format City:** Before calling the tool, format the city name for better accuracy. For example, transform queries like "Qual o clima em Itajaí, Santa Catarina?" into a more direct "Itajai, SC" for the 'city' parameter.
+    2.  **Handle Forecasts:** If the user asks for a forecast (e.g., "previsão para os próximos 5 dias"), use the 'days' parameter of the `get_weather` tool to specify the number of days. If the user doesn't specify a number of days, the tool will default to a 3-day forecast.
+    3.  **Present Information:** If the tool call is successful, present the weather report clearly and naturally in the user's language.
+    4.  **Handle Errors:** If the tool returns an error, inform the user politely that you couldn't retrieve the information.
+    """,
     tools=[get_weather],  # Pass the function directly
 )

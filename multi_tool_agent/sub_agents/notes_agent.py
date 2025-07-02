@@ -7,7 +7,7 @@ from multi_tool_agent.config import AgentModel, Configs
 from multi_tool_agent.tools.mcp_loader import load_mcp_servers
 
 logger = logging.getLogger(__name__ + ".notes-agent")
-configs = Configs(agent_settings=AgentModel(name=Field(default="NotesAgent")))
+configs = Configs(agent_settings=AgentModel(name="NotesAgent"))
 
 try:
     with open("mcp.json", "r") as f:
