@@ -1,7 +1,6 @@
 import urllib.request
 import json
 
-# @title Define the get_weather Tool
 def get_weather(city: str, days: int = 3) -> dict:
     """Retrieves the current weather report and a forecast for a specified city.
 
@@ -15,15 +14,13 @@ def get_weather(city: str, days: int = 3) -> dict:
               If 'success', includes a 'report' key with weather details.
               If 'error', includes an 'error_message' key.
     """
-    print(f"--- Tool: get_weather called for city: {city} for {days} days ---")  # Log tool execution
+    print(f"--- Tool: get_weather called for city: {city} for {days} days ---") 
     try:
-        # Use wttr.in's JSON format for easier parsing
         url = f"https://wttr.in/{city.replace(' ', '%20')}?format=j1"
         with urllib.request.urlopen(url) as response:
             if response.status == 200:
                 weather_data = json.loads(response.read().decode('utf-8'))
                 
-                # Current condition
                 current_condition = weather_data.get('current_condition', [{}])[0]
                 temp_c = current_condition.get('temp_C')
                 feels_like_c = current_condition.get('FeelsLikeC')
@@ -36,7 +33,6 @@ def get_weather(city: str, days: int = 3) -> dict:
                     f"and humidity of {humidity}%\n\n"
                 )
 
-                # Forecast
                 report += "Forecast for the next few days:\n"
                 forecast = weather_data.get('weather', [])
                 for i in range(min(days, len(forecast))):
