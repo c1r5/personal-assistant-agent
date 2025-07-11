@@ -4,7 +4,7 @@ from pydantic import BaseModel, Field
 
 class AgentModel(BaseModel):
     name: str = Field(default="MasterAssistantAgent")
-    model: str = Field(default="gemini-2.5-flash")
+    model: str = Field(default="gemini-live-2.5-flash-preview")
 
 
 class Configs(BaseSettings):

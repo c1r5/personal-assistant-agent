@@ -1,8 +1,13 @@
 from google.adk import Agent
 from google.genai import types
 
-from .config import Configs
-from .sub_agents import notes_agent, current_datetime_agent, weather_agent
+from multi_tool_agent.config import Configs
+
+from multi_tool_agent.sub_agents.notes_agent import notes_agent
+from multi_tool_agent.sub_agents.basic_agents import (
+    current_datetime_agent,
+    weather_agent,
+)
 
 gen_config = types.GenerateContentConfig(temperature=0.7, top_p=0.9)
 

@@ -2,7 +2,6 @@ import json
 import logging
 
 from google.adk import Agent
-from pydantic import Field
 from multi_tool_agent.config import AgentModel, Configs
 from multi_tool_agent.tools.mcp_loader import load_mcp_servers
 
@@ -10,7 +9,7 @@ logger = logging.getLogger(__name__ + ".notes-agent")
 configs = Configs(agent_settings=AgentModel(name="NotesAgent"))
 
 try:
-    with open("mcp.json", "r") as f:
+    with open("../mcp.json", "r") as f:
         config = json.load(f)
 
     mcp_tools = load_mcp_servers(config["servers"])

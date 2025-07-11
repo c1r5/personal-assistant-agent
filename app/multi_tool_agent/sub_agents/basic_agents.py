@@ -1,5 +1,4 @@
 from google.adk import Agent
-from pydantic import Field
 
 from multi_tool_agent.config import AgentModel, Configs
 from multi_tool_agent.tools.get_weather_tool import get_weather

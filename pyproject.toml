@@ -6,6 +6,7 @@ readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
     "dateparser>=1.2.2",
+    "fastapi[standard]>=0.115.14",
     "google-adk>=1.5.0",
     "pytz>=2025.2",
 ]
