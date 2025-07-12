@@ -1,21 +1,14 @@
 import logging
-import os
 import json
 import asyncio
-import base64
 import random
-import re
-import signal
-import sys
 import warnings
 
-from pathlib import Path
 from dotenv import load_dotenv
 
 from google.genai.types import (
     Part,
     Content,
-    Blob,
 )
 
 from fastapi import FastAPI, WebSocket
@@ -82,11 +75,9 @@ async def agent_to_client_messaging(websocket, live_events):
         async for event in live_events:
             # If the turn complete or interrupted, send it
             if event.turn_complete or event.interrupted:
-                message = {
-                    "turn_complete": event.turn_complete,
-                    "interrupted": event.interrupted,
-                }
-                await websocket.send_text(json.dumps(message))
+                message = f"Turn complete: {event.turn_complete}, Interrupted: {event.interrupted}"
+                logger.info(message)
+                await websocket.send_text(message)
                 continue
 
             # Read the Content and its first Part
@@ -98,12 +89,7 @@ async def agent_to_client_messaging(websocket, live_events):
                 continue
             
             if part.text and event.partial:
-                message = {
-                    "mime_type": "text/plain",
-                    "data": part.text
-                }
-                await websocket.send_text(json.dumps(message))
-                print(f"[AGENT TO CLIENT]: text/plain: {message}")
+                await websocket.send_text(part.text)
 
 
 async def client_to_agent_messaging(websocket, live_request_queue):
