@@ -1,0 +1,37 @@
+name: Production Workflow
+
+on:
+  push:
+    branches:
+      - main
+    paths-ignore:
+      - "README.md"
+      - "LICENSE"
+
+jobs:
+  deploy:
+    name: Deploy to Production
+    runs-on: self-hosted
+
+    steps:
+      - name: 📥 Checkout do código
+        uses: actions/checkout@v4
+
+      - name: 🧪 Rodar testes
+        run: |
+          uv sync
+          uv run -m pytest -q
+
+      - name: 📦 Sincronizar arquivos com a VPS (via rsync)
+        run: |
+          rsync -avz --exclude-from='.rsync-exclude' ./ \
+            deploy:/home/ubuntu/git/personal-assistant/agent
+
+      - name: 🚀 Subir containers com Docker Compose
+        run: |
+          ssh deploy '
+            cd /home/ubuntu/git/personal-assistant/agent &&
+            docker compose down &&
+            docker compose up --build -d &&
+            docker compose ps
+          '

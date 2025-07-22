@@ -1,0 +1,21 @@
+services:
+  personal-assistant-agent:
+    build: .
+    env_file:
+      - ./.env
+    develop:
+      watch:
+        - path: ./app/
+          action: rebuild
+        - path: ./docker-compose.yml
+          action: rebuild
+        - path: ./docker-compose.dev.yml
+          action: rebuild
+        - path: ./Dockerfile
+          action: rebuild
+    networks:
+      - devnet
+
+networks:
+  devnet:
+    external: true

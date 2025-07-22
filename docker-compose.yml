@@ -1,0 +1,11 @@
+services:
+  personal-assistant-agent:
+    image: personal-assistant-agent
+    container_name: agent
+    build: .
+    env_file:
+      - ./.env
+    environment:
+      - SERVICE_PORT=${SERVICE_PORT:-8000}
+    ports:
+      - ${SERVICE_PORT:-8000}:${SERVICE_PORT:-8000}
