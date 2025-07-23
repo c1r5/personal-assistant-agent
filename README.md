@@ -8,11 +8,15 @@ Este projeto é um agente inteligente projetado para atuar como um orquestrador 
 
 A arquitetura é construída para ser modular e extensível, permitindo que novas capacidades e integrações (conectores) sejam adicionadas de forma simples e desacoplada.
 
+## Representação Arquitetural
+
+![Arquitetura](./images/architecture.png)
+
 ## Principais Funcionalidades
 
 - **Orquestração Inteligente**: Um agente principal (`root_agent`) analisa as solicitações e delega para o subagente ou ferramenta mais adequado.
 - **Arquitetura de Conectores Extensível**: O sistema carrega dinamicamente "ferramentas" que atuam como conectores para serviços externos. O `mcp_loader.py` é um exemplo que permite a integração com qualquer ferramenta que siga o protocolo MCP via `stdio`, `sse` ou `http`.
-- **Subagentes Modulares**: Funcionalidades específicas são encapsuladas em subagentes (ex: `notes_agent`, `weather_agent`), facilitando a manutenção e a adição de novas habilidades internas.
+- **Subagentes Modulares**: Funcionalidades específicas são encapsuladas em subagentes (ex: `notion_agent`, `github_agent`), facilitando a manutenção e a adição de novas habilidades internas.
 - **Interface via API**: Expõe uma API REST (FastAPI) para receber mensagens e gerenciar sessões de conversa, permitindo a integração com qualquer frontend ou serviço de cliente.
 - **Gerenciamento de Sessão**: Mantém o contexto da conversa para interações mais fluidas e personalizadas.
 
@@ -30,7 +34,7 @@ A arquitetura é construída para ser modular e extensível, permitindo que nova
 -   `app/main.py`: Ponto de entrada da aplicação. Inicializa o servidor FastAPI, gerencia sessões e roteia as mensagens para o agente.
 -   `app/agents/agent.py`: Define o `root_agent`, o cérebro do sistema. É aqui que a lógica de orquestração e o prompt principal residem.
 -   `app/agents/client.py`: O cliente que encapsula a interação com o `root_agent`.
--   `app/agents/sub_agents/`: Contém os agentes especializados em tarefas específicas (ex: `notes_agent.py`). Para adicionar uma nova habilidade interna, você pode criar um novo arquivo aqui.
+-   `app/agents/sub_agents/`: Contém os agentes especializados em tarefas específicas (ex: `basic_agents.py`). Para adicionar uma nova habilidade interna, você pode criar um novo arquivo aqui.
 -   `app/agents/tools/`: Contém a lógica para se conectar a ferramentas externas. O `mcp_loader.py` é um exemplo poderoso de como carregar conectores dinamicamente.
 -   `app/server/`: Controladores da API FastAPI.
 -   `pyproject.toml` / `uv.lock`: Dependências do projeto.
