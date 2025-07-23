@@ -196,3 +196,4 @@ cython_debug/
 
 mcp.json
 api_keys.json
+app.log
