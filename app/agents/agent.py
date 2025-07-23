@@ -1,12 +1,18 @@
 from google.adk import Agent
-from google.adk.tools.mcp_tool import MCPToolset, StreamableHTTPConnectionParams
+from google.adk.tools.mcp_tool import (
+    MCPToolset,
+    StdioConnectionParams,
+    StreamableHTTPConnectionParams
+)
+from mcp import StdioServerParameters
 from google.genai import types
 
 import logging
 
-from agents.config import  Configs
+from agents.config import Configs
 from agents.sub_agents.basic_agents import current_datetime_agent
 from helpers import getenv_or_raise
+import json
 
 logger = logging.getLogger(__name__)
 
@@ -41,29 +47,35 @@ notion_agent = Agent(
     model=configs.agent_settings.model,
     tools=[
         MCPToolset(
-                    connection_params=StreamableHTTPConnectionParams(
-                        url="https://mcp.notion.com/mcp",
-                        headers={
+            connection_params=StdioConnectionParams(
+                timeout=60,
+                server_params=StdioServerParameters(
+                    command="npx",
+                    args=["-y", "@notionhq/notion-mcp-server"],
+                    env={
+                        "OPENAPI_MCP_HEADERS": json.dumps({
                             "Authorization": "Bearer " + getenv_or_raise("NOTION_API_KEY"),
                             "Notion-Version": "2022-06-28"
-                        }
-                    )
-                )
+                        })
+                    },
+                ),
+            )
+        )
     ],
     generate_content_config=gen_config,
-    instruction = """
+    instruction="""
     You are a specialized Notion agent integrated into an MCP (Model Context Protocol) environment. Your primary function is to interact with Notion through the available MCP tools, acting as an intelligent interface between the user and Notion's API.
-    
+
     You must strictly rely on the provided tools for any operation involving Notion (e.g., 'list pages in a database', 'fetch a block’s content', 'update a page property', 'append a new block').
-    
+
     1. **Understand the user intent:** Interpret the user's request precisely and determine what kind of interaction with Notion is required.
     2. **Use only available tools:** Do not fabricate answers or hallucinate content. Select and call the appropriate tool for the request.
     3. **Call tools with precision:** Provide complete and accurate parameters when invoking a tool (e.g., database_id, page_id, block_id, filters).
     4. **Structure the result:** Return the results in a clean, structured, and easy-to-understand format. Avoid dumping raw JSON unless explicitly requested.
     5. **Maintain context awareness:** Reuse relevant context like previously selected databases, pages, or filters to provide a smoother and more helpful user experience.
-    
+
     You operate in a stateless environment unless the system provides memory. Always assume your current knowledge comes from the last interaction and tool result. Be concise, accurate, and aligned with the actual state of the Notion workspace.
-    
+
     Your goal is to be a reliable and intelligent interface to Notion, capable of streamlining workflows, surfacing insights, and reducing the friction of using Notion through MCP.
 """,
 )
@@ -74,13 +86,14 @@ github_agent = Agent(
     model=configs.agent_settings.model,
     tools=[
         MCPToolset(
-                    connection_params=StreamableHTTPConnectionParams(
-                        url="https://api.githubcopilot.com/mcp/",
-                        headers={
-                            "Authorization": "Bearer " + getenv_or_raise("GITHUB_PERSONAL_ACCESS_TOKEN"),
-                        }
-                    )
-                )
+            connection_params=StreamableHTTPConnectionParams(
+                url="https://api.githubcopilot.com/mcp/",
+                headers={
+                    "Authorization": "Bearer "
+                    + getenv_or_raise("GITHUB_PERSONAL_ACCESS_TOKEN"),
+                },
+            )
+        )
     ],
     generate_content_config=gen_config,
     instruction="""
