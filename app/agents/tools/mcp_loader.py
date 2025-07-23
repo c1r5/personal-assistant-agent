@@ -16,6 +16,7 @@ MCPServerConfig = Dict[str, Dict[str, str]]
 Connection = Dict[str, Any]
 DiscoveredServers = Dict[str, Connection]
 
+
 def _detect_transport(server_config: Dict[str, str]) -> Transport:
     specified_type = server_config.pop("type", None)
 
@@ -31,6 +32,7 @@ def _detect_transport(server_config: Dict[str, str]) -> Transport:
             return "streamable_http"
 
     return "stdio"
+
 
 def _mcp_config_server_parser(mcp_server_configs: MCPServerConfig) -> DiscoveredServers:
     discovered_servers: DiscoveredServers = {}
@@ -74,6 +76,7 @@ def _load_mcp_toolset(connection: Connection) -> MCPToolset:
                     timeout=60,
                 )
             )
+
 
 def load_mcp_servers(mcp_config: MCPServerConfig) -> Tuple[List[MCPToolset], List[str]]:
     servers = _mcp_config_server_parser(mcp_config)

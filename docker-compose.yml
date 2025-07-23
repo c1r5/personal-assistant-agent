@@ -3,6 +3,8 @@ services:
     image: personal-assistant-agent
     container_name: agent
     build: .
+    volumes:
+      - ./logs:/app/logs
     env_file:
       - ./.env
     environment:

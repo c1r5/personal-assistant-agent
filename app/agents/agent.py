@@ -2,7 +2,7 @@ from google.adk import Agent
 from google.adk.tools.mcp_tool import (
     MCPToolset,
     StdioConnectionParams,
-    StreamableHTTPConnectionParams
+    StreamableHTTPConnectionParams,
 )
 from mcp import StdioServerParameters
 from google.genai import types
@@ -53,10 +53,13 @@ notion_agent = Agent(
                     command="npx",
                     args=["-y", "@notionhq/notion-mcp-server"],
                     env={
-                        "OPENAPI_MCP_HEADERS": json.dumps({
-                            "Authorization": "Bearer " + getenv_or_raise("NOTION_API_KEY"),
-                            "Notion-Version": "2022-06-28"
-                        })
+                        "OPENAPI_MCP_HEADERS": json.dumps(
+                            {
+                                "Authorization": "Bearer "
+                                + getenv_or_raise("NOTION_API_KEY"),
+                                "Notion-Version": "2022-06-28",
+                            }
+                        )
                     },
                 ),
             )

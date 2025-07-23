@@ -5,6 +5,7 @@ on:
     branches:
       - main
     paths-ignore:
+      - "assets/"
       - "README.md"
       - "LICENSE"
 
@@ -17,9 +18,14 @@ jobs:
       - name: 📥 Checkout do código
         uses: actions/checkout@v4
 
-      - name: 🧪 Rodar testes
+      - name: 🔍 Rodar lint
         run: |
           uv sync
+          uv run ruff check .
+          uv run ruff format --check .
+
+      - name: 🧪 Rodar testes
+        run: |
           uv run -m pytest -q
 
       - name: 📦 Sincronizar arquivos com a VPS (via rsync)
@@ -27,11 +33,10 @@ jobs:
           rsync -avz --exclude-from='.rsync-exclude' ./ \
             deploy:/home/ubuntu/git/personal-assistant/agent
 
-      - name: 🚀 Subir containers com Docker Compose
+      - name: 🚀 Executar deploy script
         run: |
           ssh deploy '
             cd /home/ubuntu/git/personal-assistant/agent &&
-            docker compose down &&
-            docker compose up --build -d &&
-            docker compose ps
+            chmod +x deploy.sh &&
+            ./deploy.sh
           '

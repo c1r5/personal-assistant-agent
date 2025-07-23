@@ -1,8 +1,7 @@
-__import__('dotenv').load_dotenv()
+import os
 
 from pydantic import ValidationError
 from uvicorn import Config, Server
-import os
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -15,13 +14,19 @@ import signal
 import asyncio
 import logging
 
+__import__("dotenv").load_dotenv()
+
 logger = logging.getLogger(__name__)
 
 app = FastAPI()
 agent = AgentClient()
+
+
 # Porta do servico
 def get_service_port() -> int:
     return int(os.getenv("SERVICE_PORT", "8000"))
+
+
 # Configurar CORS
 app.add_middleware(
     CORSMiddleware,
@@ -32,6 +37,7 @@ app.add_middleware(
 )
 
 app.include_router(controller)
+
 
 async def on_session_message(message: str, session_id: str):
     logger.info(f"Received message: {message}")
@@ -44,8 +50,9 @@ async def on_session_message(message: str, session_id: str):
 
     try:
         client_message = ConnectorRequest.model_validate_json(message)
-        async for raw_agent_response in agent.request(session_id, client_message.content):
-
+        async for raw_agent_response in agent.request(
+            session_id, client_message.content
+        ):
             parsed_agent_response = AgentResponse(content=raw_agent_response.strip())
 
             await session.send_message(parsed_agent_response.model_dump_json())
@@ -53,6 +60,7 @@ async def on_session_message(message: str, session_id: str):
     except ValidationError as e:
         logger.error(f"Invalid message: {message}", exc_info=e)
         return
+
 
 async def on_create_session(session_id: str):
     session = await session_repository.get_session(session_id)
@@ -63,8 +71,10 @@ async def on_create_session(session_id: str):
 
     session.add_on_message_listener(on_session_message)
 
+
 async def on_delete_session(session_id: str):
     await agent.delete_session(session_id)
+
 
 async def session_event_listener(event: SessionEvent):
     match event.type:
@@ -76,6 +86,7 @@ async def session_event_listener(event: SessionEvent):
             await on_delete_session(event.session_id)
         case _:
             logger.warning(f"Unknown event type: {event.type}")
+
 
 async def main():
     loop = asyncio.get_running_loop()
@@ -99,7 +110,7 @@ async def main():
         host="0.0.0.0",
         port=get_service_port(),
         log_level="info",
-        loop='asyncio'
+        loop="asyncio",
     )
     server = Server(config)
     server_task = asyncio.create_task(server.serve())
@@ -120,10 +131,13 @@ async def main():
         for task in tasks:
             task.cancel()
 
+
 if __name__ == "__main__":
     logging.basicConfig(
         level=logging.INFO,
-        format="%(asctime)s - %(levelname)s - %(message)s"
+        format="%(asctime)s - %(levelname)s - %(message)s",
+        filename="logs/app.log",
+        datefmt="%Y-%m-%d %H:%M:%S",
     )
 
     try:

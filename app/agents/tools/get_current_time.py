@@ -2,6 +2,7 @@ from datetime import datetime, timedelta
 import pytz
 import dateparser
 
+
 def get_current_time(timezone: str = "America/Sao_Paulo", lang: str = "pt") -> dict:
     """
     Retorna a hora atual de forma estruturada.
@@ -15,10 +16,13 @@ def get_current_time(timezone: str = "America/Sao_Paulo", lang: str = "pt") -> d
         "minute": now.minute,
         "weekday": now.strftime("%A"),  # Ainda em inglês
         "timezone": now.strftime("%Z"),
-        "iso": now.isoformat()
+        "iso": now.isoformat(),
     }
 
-def calculate_future_date(days: int = 0, weeks: int = 0, timezone: str = "America/Sao_Paulo", lang: str = "pt") -> dict:
+
+def calculate_future_date(
+    days: int = 0, weeks: int = 0, timezone: str = "America/Sao_Paulo", lang: str = "pt"
+) -> dict:
     """
     Soma dias/semanas à data atual e retorna a nova data de forma estruturada.
     """
@@ -32,10 +36,13 @@ def calculate_future_date(days: int = 0, weeks: int = 0, timezone: str = "Americ
         "minute": future.minute,
         "weekday": future.strftime("%A"),
         "timezone": future.strftime("%Z"),
-        "iso": future.isoformat()
+        "iso": future.isoformat(),
     }
 
-def parse_date_query(question: str, timezone: str = "America/Sao_Paulo", lang: str = "pt") -> dict:
+
+def parse_date_query(
+    question: str, timezone: str = "America/Sao_Paulo", lang: str = "pt"
+) -> dict:
     """
     Interpreta uma string como "daqui a 2 semanas" e retorna a data interpretada.
     """
@@ -53,8 +60,9 @@ def parse_date_query(question: str, timezone: str = "America/Sao_Paulo", lang: s
         "minute": localized.minute,
         "weekday": localized.strftime("%A"),
         "timezone": localized.strftime("%Z"),
-        "iso": localized.isoformat()
+        "iso": localized.isoformat(),
     }
+
 
 def get_day_of_week(date_str: str, lang: str = "pt") -> dict:
     """
@@ -67,7 +75,7 @@ def get_day_of_week(date_str: str, lang: str = "pt") -> dict:
             "month": date.month,
             "day": date.day,
             "weekday": date.strftime("%A"),
-            "iso": date.date().isoformat()
+            "iso": date.date().isoformat(),
         }
     except Exception as e:
         return {"error": str(e)}

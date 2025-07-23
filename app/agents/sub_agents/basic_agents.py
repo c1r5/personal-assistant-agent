@@ -48,7 +48,7 @@ current_datetime_agent = Agent(
        → then respond: "Isso será em uma segunda-feira, 28 de julho."
 
     Build responses from the fields. Do not return the raw dictionary directly to the user.
-    """
+    """,
 )
 
 # configs = Configs(agent_settings=AgentModel(name="WeatherAgent"))
