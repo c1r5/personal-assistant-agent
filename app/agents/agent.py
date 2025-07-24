@@ -20,27 +20,6 @@ gen_config = types.GenerateContentConfig(temperature=0.7, top_p=0.9)
 
 configs = Configs()
 
-# try:
-#     root_path = find_project_root(__file__)
-
-#     if not root_path:
-#         raise ValueError("Project root not found")
-
-#     mcp_file = list(Path(root_path).rglob("mcp.json"))[0]
-
-#     with open(mcp_file, "r") as f:
-#         config = json.load(f)
-
-#     mcp_tools, mcp_tool_names = load_mcp_servers(config["servers"])
-#     MCP_INSTRUCTION = f"""Your goal is to answer the user's request using the available tools.
-# The following MCP tools are at your disposal: {', '.join(mcp_tool_names)}
-# """
-#     logger.info(f"Loaded MCP tools: {', '.join(mcp_tool_names)}")
-# except Exception as e:
-#     mcp_tools = []
-#     MCP_INSTRUCTION = "No MCP tools were loaded."
-#     logger.error("Error getting tools from file: ", exc_info=e)
-
 notion_agent = Agent(
     name="NotionAgent",
     description="A specialized agent that can interact with Notion tools.",

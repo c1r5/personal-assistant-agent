@@ -1,3 +1,5 @@
+# Stage 1: Base Image
+# Using the specific Python version you provided.
 FROM python:3.13-slim-bookworm
 
 ENV DEBIAN_FRONTEND=noninteractive
@@ -28,4 +30,3 @@ COPY ./mcp.json /app/
 COPY ./api_keys.json /app/
 
 CMD ["uv", "run", "-m", "main"]
-
