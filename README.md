@@ -10,7 +10,7 @@ A arquitetura é construída para ser modular e extensível, permitindo que nova
 
 ## Representação Arquitetural
 
-![Arquitetura](./images/architecture.png)
+![Arquitetura](./assets/architecture.png)
 
 ## Principais Funcionalidades
 
